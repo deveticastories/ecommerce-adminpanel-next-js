@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Aavya Boutique — Admin Panel
 
-## Getting Started
+Admin panel for **Aavya Heritage & Bachpan**, a ladies & kids ethnic-wear boutique: dashboard,
+products (with size × colour variant stock), orders, customers, categories & collections,
+coupons and shop settings.
 
-First, run the development server:
+Built with Next.js 16 (App Router, Cache Components), Tailwind CSS v4, Base UI / shadcn
+primitives, Motion animations, Recharts and Zustand.
+
+## Getting started
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev        # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Sign in with the demo account: `admin@aavya.boutique` / `Boutique@2026`
+(or press **Use demo credentials & sign in**).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Data is seeded from `src/data/seed.ts` and saved in the browser (`localStorage`, key
+`aavya-admin`). Clear that key to reset the demo.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Folder structure
 
-## Learn More
+```
+src/
+├── app/                    Routes only — each page renders a screen
+│   ├── layout.tsx          Fonts, metadata, providers
+│   ├── globals.css         Tailwind + theme tokens (light & dark)
+│   ├── login/page.tsx
+│   └── (admin)/            Guarded routes sharing the sidebar + header shell
+│       ├── layout.tsx
+│       ├── page.tsx        Dashboard
+│       └── products/ orders/ customers/ categories/ coupons/ settings/
+├── screens/                One file per screen (LoginScreen, DashboardScreen, …)
+├── components/
+│   ├── ui/                 Base primitives (button, card, dialog, sheet, select, table…)
+│   ├── common/             Shared pieces (PageHeader, StatusBadge, ConfirmDialog, RowActions…)
+│   ├── layout/             AppShell, Sidebar, TopBar, MobileNav, AuthGuard, SplashScreen
+│   ├── providers/          Theme, motion and store hydration
+│   └── dashboard/ products/ orders/ customers/ categories/ coupons/
+├── utils/
+│   ├── Colors.ts           Brand palette, colourways, badge tones
+│   ├── Sizes.ts            Layout sizes and spacing recipes
+│   ├── Fonts.ts            Playfair Display / Plus Jakarta Sans / IBM Plex Mono + text styles
+│   ├── Images.ts           Local image paths
+│   ├── Constants.ts        Routes, navigation, labels, sizes, thresholds
+│   ├── Format.ts           ₹ currency, dates, slugs, stock chips
+│   ├── Animations.ts       Shared Motion variants and transitions
+│   └── cn.ts               className merge helper
+├── store/                  Zustand store with all data actions
+├── hooks/                  Derived data (products, customers, dashboard KPIs)
+├── data/seed.ts            Demo catalogue, orders, customers, coupons
+└── types/                  Domain types
+public/images/              Product photography and the login hero
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Connecting a backend
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Screens only read from `src/store/useBoutiqueStore.ts` and the hooks in `src/hooks`. To use a
+real API, replace the store actions with API calls (or swap the store for a data-fetching
+layer) — the screens and components don't need to change.
